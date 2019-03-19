@@ -1,4 +1,5 @@
 public class CarNode {
+    
     private Car car;
     private char value;
     private CarNode children;
