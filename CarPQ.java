@@ -59,7 +59,7 @@ public class CarPQ {
         assert isMinHeap();
     }
 
-    public void delete(int i) {
+    public void remove(int i) {
         if (isEmpty()) throw new NoSuchElementException("Car priority queue underflow");
         exch(i, numCars--);
         swim(i);

@@ -6,38 +6,42 @@ public class CarTracker {
     private static Scanner fsc;
     private static Scanner sc;
     private static String[] line;
+    private static PQController controller;
 
     public static void main(String[] args) {
         
         BufferedReader br;
         int input = 0;
+        controller = new PQController();
         
         try {
             File file = new File("cars.txt");
+            System.out.println("\nImporting cars from " + file.getName() + "...\n");
             fsc = new Scanner(file);
             sc = new Scanner(System.in);
         } catch (IOException e) {
             System.out.println(e);
             System.exit(1);
         }
-        
+
         while(fsc.hasNextLine()) {
             line = fsc.nextLine().split(":");
             char comment = line[0].charAt(0);
             if (comment != '#') {
-                // System.out.println("VIN: " + line[0] +
-                //             "\nMake: " + line[1] +
-                //            "\nModel: " + line[2] +
-                //            "\nPrice: " + line[3] +
-                //          "\nMileage: " + line[4] +
-                //            "\nColor: " + line[5] + "\n");
+                System.out.println("\tVIN: " + line[0] +
+                            "\n\tMake: " + line[1] +
+                           "\n\tModel: " + line[2] +
+                           "\n\tPrice: " + line[3] +
+                         "\n\tMileage: " + line[4] +
+                           "\n\tColor: " + line[5] + "\n");
                 String vin = line[0];
                 String make = line[1];
                 String model = line[2];
                 int price = Integer.parseInt(line[3]);
                 int mileage = Integer.parseInt(line[4]);
                 String color = line[5];           
-                Car car = new Car(vin, make, model, color, price, mileage);                           
+                Car car = new Car(vin, make, model, color, price, mileage);
+                controller.insert(car);                           
             }
         }
 
@@ -119,7 +123,9 @@ public class CarTracker {
         System.out.print("Enter a mileage: ");
         mileage = Integer.parseInt(sc.nextLine());
 
-        Car car = new Car(vin, make, model, color, price, mileage);
+        Car newCar = new Car(vin, make, model, color, price, mileage);
+
+        controller.insert(newCar);
 
     } // end addCar()
 
@@ -186,7 +192,9 @@ public class CarTracker {
         
         System.out.println("\n\t--- Get Lowest Priced Car ---");
 
-        // print out the details of the lowest priced car
+        Car lowestPriceCar = PQController.getLowestPriceCar();
+        if (lowestPriceCar == null) System.out.println("\n\t--- Car Inventory Empty ---");
+        else System.out.println("\n" + lowestPriceCar.toString());
 
     } // end getLowestPriceCar
 
@@ -211,7 +219,9 @@ public class CarTracker {
 
         System.out.println("\n\t--- Get Lowest Mileage Car ---");
 
-        // print out the details of the lowest mileage car 
+        Car lowestMileageCar = PQController.getLowestMileageCar();
+        if (lowestMileageCar == null) System.out.println("\n\t--- Car Inventory Empty ---");
+        else System.out.println("\n" + lowestMileageCar.toString());
 
     } // end getLowestMileageCar()
 
@@ -232,5 +242,5 @@ public class CarTracker {
 
 
     } // end getLowestMileageCarByMakeAndModel()
-    
+
 }
