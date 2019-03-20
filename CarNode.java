@@ -1,12 +1,21 @@
 public class CarNode {
-    
+
     private Car car;
     private char value;
-    private CarNode children;
+    private CarNode child;
     private CarNode sibling;
     
+    public CarNode() { }
+    
     public CarNode(char val) {
-        this.value = val;
+        this(null, val, null, null);
+    }
+
+    public CarNode(Car car, char value, CarNode child, CarNode sibling) {
+        this.car = car;
+        this.value = value;
+        this.child = child;
+        this.sibling = sibling;
     }
 
     public Car getCar() {
@@ -17,11 +26,11 @@ public class CarNode {
         return value;
     }
 
-    public CarNode getChildren() {
-        return children;
+    public CarNode getChildNode() {
+        return child;
     }
 
-    public CarNode getSibling() {
+    public CarNode getSiblingNode() {
         return sibling;
     }
 
@@ -33,11 +42,11 @@ public class CarNode {
         this.value = value;
     }
 
-    public void setChildren(CarNode children) {
-        this.children = children;
+    public void setChildNode(CarNode child) {
+        this.child = child;
     }
 
-    public void setSibling(CarNode sibling) {
+    public void setSiblingNode(CarNode sibling) {
         this.sibling = sibling;
     }
 

@@ -7,12 +7,14 @@ public class CarTracker {
     private static Scanner sc;
     private static String[] line;
     private static PQController controller;
+    private static VINTrie carVINs;
 
     public static void main(String[] args) {
         
         BufferedReader br;
         int input = 0;
         controller = new PQController();
+        carVINs = new VINTrie();
         
         try {
             File file = new File("cars.txt");
@@ -41,7 +43,8 @@ public class CarTracker {
                 int mileage = Integer.parseInt(line[4]);
                 String color = line[5];           
                 Car car = new Car(vin, make, model, color, price, mileage);
-                controller.insert(car);                           
+                controller.insert(car);
+                carVINs.insert(car);                           
             }
         }
 
@@ -126,6 +129,7 @@ public class CarTracker {
         Car newCar = new Car(vin, make, model, color, price, mileage);
 
         controller.insert(newCar);
+        carVINs.insert(newCar);
 
     } // end addCar()
 
@@ -136,15 +140,21 @@ public class CarTracker {
         int price = 0;
         int mileage = 0;
         int input = 0;
+        Car carToUpdate = null;
 
         System.out.println("\n\t--- Update Car ---");
 
         System.out.print("\nEnter a VIN: ");
         vin = sc.nextLine();
 
-        // Print out Vehicle info
+        if (carVINs.getCar(vin) == null) {
+            System.out.println("\n\tCar Does Not Exist...");
+            return;
+        }
 
         do {
+            carToUpdate = carVINs.getCar(vin);
+            System.out.println("\n" + carToUpdate.toString());
             System.out.println("\n\t1. Update Price");
             System.out.println("\t2. Update Mileage");
             System.out.println("\t3. Update Color");
@@ -156,14 +166,20 @@ public class CarTracker {
                 case 1:
                     System.out.print("\nNew Price: $");
                     price = Integer.parseInt(sc.nextLine());
+                    carToUpdate.setPrice(price);
+                    controller.update(carToUpdate, "Price");       
                     break;
                 case 2:
                     System.out.print("\nNew Mileage: ");
                     mileage = Integer.parseInt(sc.nextLine());
+                    carToUpdate.setMileage(mileage);
+                    controller.update(carToUpdate, "Mileage");
                     break;
                 case 3:
                     System.out.print("\nNew Color: ");
                     color = sc.nextLine();
+                    carToUpdate.setColor(color);
+                    controller.update(carToUpdate, "Price");
                     break;
                 case 4:
                     return;
@@ -178,14 +194,22 @@ public class CarTracker {
     public static void removeCar() {
 
         String vin = "";
+        Car carToRemove = null;
 
         System.out.println("\n\t--- Remove Car ---");
 
         System.out.print("\nEnter a VIN: ");
         vin = sc.nextLine();
 
-        // print out the details of the removed car
-
+        if (carVINs.getCar(vin) == null) {
+            System.out.println("\n\tCar Does Not Exist...");
+        } else {
+            carToRemove = carVINs.getCar(vin);
+            System.out.println("\n\tRemoving Car..." +
+                               "\n\n" + carToRemove.toString());
+            controller.remove(carToRemove);
+            carVINs.remove(vin);
+        }
     } // end removeCar()
 
     public static void getLowestPriceCar() {
